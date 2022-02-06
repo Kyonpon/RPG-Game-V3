@@ -45,15 +45,65 @@ while is_playing:
         while not is_defeated:
             # makes the player_hp to cur_player_hp
             cur_player_hp = player_hp
+
+            cur_player_mp = player_mana
             # Gets user Input
             player_action = Functions.main_input_system()
             # Default damage to enemy
             dealt_damage = 0
 
+
+            # Player Attack
             # physical attack
             if player_action == 'LT':
                 damaged_enemy = Functions.physical_atk(player_physical_atk, damaged_enemy)
                 dealt_damage = player_physical_atk
+
+            # magical attack
+            if player_action == 'RT':
+                # IF_1 Checks if the user have enough mana
+                if player_mana > 50:
+                    print('DEBUG: HAVE THE REQUIRED MANA')
+                    Functions.print_magic_atk()
+                    # W1 Will loop until the user choose a right option
+                    waiting_magical_atk = True
+                    while waiting_magical_atk:
+                        possible_magic_atk = ['Q', 'W']
+                        used_magic_atk = input('➤ ').upper()
+                        # IF_2 checks if the user input is in possible inputs
+                        if used_magic_atk in possible_magic_atk:
+                            # IF_3 checks if what attack user used
+                            if used_magic_atk == 'Q':
+                                damaged_enemy = Functions.magic_atk(player_base_magical_atk,
+                                                    'FIRE',
+                                                    battling_normal_enemy.magical_resistance,
+                                                    battling_normal_enemy.magical_weakness,
+                                                    battling_normal_enemy.health)
+                                damaged_enemy = round(damaged_enemy,0)
+                                cur_player_mp = cur_player_mp - 40
+                                dealt_damage = Functions.magically_damage_done
+                                waiting_magical_atk = False
+
+                            # IF_3 checks if what attack user used
+                            elif used_magic_atk == 'W':
+                                damaged_enemy = Functions.magic_atk(player_base_magical_atk,
+                                                    'WATER',
+                                                    battling_normal_enemy.magical_resistance,
+                                                    battling_normal_enemy.magical_weakness,
+                                                    battling_normal_enemy.health)
+                                damaged_enemy = round(damaged_enemy, 0)
+                                cur_player_mp = cur_player_mp - 40
+                                dealt_damage = Functions.magically_damage_done
+                                waiting_magical_atk = False
+                        # IF_2 checks if the user input is in possible inputs
+                        else:
+                            print('SYSTEM: INVALID INPUT')
+                            waiting_magical_atk = True
+                # IF_1 Checks if user have enough mana
+                elif player_mana < 50:
+                    print('SYSTEM: YOU DON\'T HAVE ENOUGH MANA')
+
+
 
             # Player Attacking Sequence
             print('')
@@ -93,7 +143,7 @@ while is_playing:
                     print('')
 
                 # Updated GUI
-                Functions.print_player_status(cur_player_hp, player_mana, player_hp_potion, player_mana_potion,
+                Functions.print_player_status(cur_player_hp, cur_player_mp, player_hp_potion, player_mana_potion,
                                               player_score)
                 print('Enemy Type: ' + str(battling_normal_enemy.type))
                 print('Enemy Health: ' + str(damaged_enemy))
@@ -108,6 +158,7 @@ while is_playing:
 
             # makes the cur_player_hp to player_hp
             player_hp = cur_player_hp
+            player_mana = cur_player_mp
 
     is_fullfilled_req_battles = True
 
