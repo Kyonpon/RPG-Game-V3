@@ -1,4 +1,5 @@
 import random
+import Enemies
 
 def print_player_status(health, mana, health_potion, mana_potions, score):
     print('----------------------------------------------------------')
@@ -10,11 +11,12 @@ def print_player_status(health, mana, health_potion, mana_potions, score):
 
 def print_actions():
     print('----------------------------------------------------------')
+    print('ACTIONS')
     print('[LT] - Physical Attack            [RT] - Magical Attacks')
     print('[A] - Drink Health Potion         [B] - Drink Mana Potion')
-    print('[X] - Flee                        [Y] - Items')
+    print('[X] - Appraise                    [Y] - Items')
     print('----------------------------------------------------------')
-    print('SYSTEM: CHOOSE A ACTION')
+
 
 
 def print_magic_atk():
@@ -26,10 +28,20 @@ def print_magic_atk():
 
 def print_items():
     print('-----------------------------------------------------------')
-    print('[Q] - Instant Health Potion       [W] - Instant Mana Potion')
+    print('[Q] - Instant Health Potion| QTY: ' + str(Enemies.max_hp_potion.in_inventory))
+    print('[W] - Instant Mana Potion| QTY: ' + str(Enemies.max_mp_potion.in_inventory))
     print('[E] - Instant Kill Potion')
+    print('[X] - GO BACK TO ACTIONS')
     print('-----------------------------------------------------------')
-    print('SYSTEM: CHOOSE A ITEMS')
+    print('SYSTEM: CHOOSE A ITEM')
+
+def print_enemy_stats(enemy_resistance, enemy_weakness, enemy_physcal_atk, enemy_magical_atk):
+    print('-----------------------------------------------------------')
+    print('Enemy Resistance: ' + enemy_resistance )
+    print('Enemy Weakness: ' + enemy_weakness)
+    print('Enemy Physical Attack: ' + str(enemy_physcal_atk))
+    print('Enemy Magical Attack: ' + str(enemy_magical_atk))
+    print('-----------------------------------------------------------')
 
 
 def physical_atk(user_physical_atk, enemy_hp):
@@ -78,8 +90,8 @@ def drink_health_potion(user_health, user_max_health):
     if user_health < user_max_health and user_health > 0:
         healed_user = user_health + 50
 
-    elif user_health > user_max_health:
-        print('SYSTEM: YOU HAVE MAX HEALTH')
+    if user_health > user_max_health:
+        healed_user = user_max_health
 
     return healed_user
 
@@ -162,5 +174,33 @@ def enemy_attacking(enemy_atk, player_health):
         return damaged_player
     elif damaged_player <= 0:
         return damaged_player
+
+
+def choosing_a_item(used_item):
+    if used_item in possible_item:
+        if used_item == 'Q':
+            cur_player_hp = player_max_hp
+            print('HEALED TO MAX HP')
+            print('YOUR\'E CURRENT HP IS: ' + str(cur_player_hp))
+            waiting_choosing_a_item = False
+            player_attacked = False
+            Enemies.max_hp_potion.in_inventory = Enemies.max_hp_potion.in_inventory - 1
+        elif used_item == 'W':
+            cur_player_mp = player_max_mana
+            print('REGENERATED TO MAX MP')
+            print('YOUR\'E CURRENT HP IS: ' + str(cur_player_mp))
+            waiting_choosing_a_item = False
+            player_attacked = False
+            Enemies.max_mp_potion.in_inventory = Enemies.max_mp_potion.in_inventory - 1
+
+        elif used_item == 'E':
+            damaged_enemy = 0
+            waiting_choosing_a_item = False
+            player_attacked = True
+            dealt_damage = battling_normal_enemy.health
+            Enemies.instant_kill_potion.in_inventory = Enemies.instant_kill_potion.in_inventory - 1
+    else:
+        print('SYSTEM: INVALID INPUT')
+        waiting_choosing_a_item = True
 
 
