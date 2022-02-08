@@ -53,3 +53,15 @@ boss_enemy_list = [demon,minotour]
 
 randomized_norm_enemy_list = [i for i in normal_enemy_list]
 random.shuffle(randomized_norm_enemy_list)
+
+class Items:
+    def __init__(self, item_name, in_inventory):
+        self.item_name = item_name
+        self.in_inventory = in_inventory
+
+
+max_hp_potion = Items('MAX HP POTION', random.randint(1,5))
+max_mp_potion = Items('MAX MP POTION', random.randint(0,5))
+instant_kill_potion = Items('INSTANT KILL POTION', random.randint(0,2))
+
+item_list = [max_mp_potion, max_hp_potion, instant_kill_potion]
